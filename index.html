@@ -207,34 +207,30 @@ async function draw(){
   ctx.textBaseline="middle";
   ctx.fillStyle="#303030";
 
-  // Write participant details in a larger, bold font on the printed lines.
-  // Participant ID is placed after its label; the remaining values sit on their lines.
-  if(regNo){
-    const idText=regNo.replace(/[\r\n\t]+/g," ").replace(/\s+/g," ").trim();
-    const idWidth=500;
-    ctx.font="bold 44px Georgia";
-    ctx.fillText(idText,375,1545);
-  }
-  if(name){
-    const nameText=name.replace(/[\r\n\t]+/g," ").replace(/\s+/g," ").trim();
-    const nameWidth=920;
-    ctx.font="bold 44px Georgia";
-    ctx.fillText(nameText,220,1637);
-  }
-  if(designation){
-    const collegeText=designation.replace(/[\r\n\t]+/g," ").replace(/\s+/g," ").trim();
-    const collegeWidth=820;
-    ctx.font="bold 44px Georgia";
-    ctx.fillText(collegeText,365,1717);
-  }
-  if(mobile){
-    // Strip spaces and punctuation so the complete phone number is always one continuous line.
-    const mobileText=mobile.replace(/\D/g,"").slice(0,10);
-    const mobileWidth=560;
-    ctx.font="bold 44px Georgia";
+  // Center-aligned participant detail rows with labels placed to the left and values to the right.
+  const detailRows = [
+    { y: 1545, label: "Participant ID", value: regNo },
+    { y: 1637, label: "Name", value: name },
+    { y: 1717, label: "College Name", value: designation },
+    { y: 1792, label: "Mob. No.", value: mobile }
+  ];
+
+  const labelX = 230;
+  const valueX = 600;
+
+  detailRows.forEach(({y,label,value})=>{
+    if(!value) return;
+    const cleanValue = value.replace(/[\r\n\t]+/g," ").replace(/\s+/g," ").trim();
+    const cleanLabel = label.replace(/[\r\n\t]+/g," ").replace(/\s+/g," ").trim();
+    ctx.textAlign="right";
+    ctx.font="bold 34px Georgia";
+    ctx.fillText(cleanLabel + " :", labelX, y);
+
     ctx.textAlign="left";
-    ctx.fillText(mobileText,285,1792);
-  }
+    ctx.font="bold 38px Georgia";
+    const finalValue = label === "Mob. No." ? cleanValue.replace(/\D/g,"").slice(0,10) : cleanValue;
+    ctx.fillText(finalValue, valueX, y);
+  });
 
 }
 
